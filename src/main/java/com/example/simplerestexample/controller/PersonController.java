@@ -27,6 +27,18 @@ public class PersonController {
         return new ResponseEntity<Person>(personRepository.save(person), HttpStatus.CREATED);
     }
 
+    //Deleta pessoa
+    @DeleteMapping("/personDelete/{id}")
+    public ResponseEntity<?> deletePerson(@PathVariable(value="id") long id){
+        Optional<Person> person = personRepository.findById(id);
+        if(!person.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            personRepository.delete(person.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
 
     //Busca todas pessoas cadastradas
     @GetMapping("/personSearch")
