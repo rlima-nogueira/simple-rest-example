@@ -27,15 +27,15 @@ public class PersonController {
         return new ResponseEntity<Person>(personRepository.save(person), HttpStatus.CREATED);
     }
 
-    //Deleta pessoa
-    @DeleteMapping("/personDelete/{id}")
-    public ResponseEntity<?> deletePerson(@PathVariable(value="id") long id){
-        Optional<Person> person = personRepository.findById(id);
-        if(!person.isPresent()){
+    //Faz alteração de cadastro
+    @PutMapping("/personAlter/{id}")
+    public ResponseEntity<Person> update(@PathVariable(value = "id") long id, @RequestBody @Validated Person person){
+        Optional<Person> persona = personRepository.findById(id);
+        if (!persona.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-            personRepository.delete(person.get());
-            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            person.setId(persona.get().getId());
+            return new ResponseEntity<Person>(personRepository.save(person), HttpStatus.OK);
         }
     }
 
@@ -51,6 +51,7 @@ public class PersonController {
         }
     }
 
+    //Busca pessoa por ID
     @GetMapping("/person/{id}")
     public ResponseEntity<Person> getOnePerson(@PathVariable(value="id") long id){
         Optional<Person> person = personRepository.findById(id);
@@ -60,5 +61,18 @@ public class PersonController {
             return new ResponseEntity<Person>(person.get(), HttpStatus.OK);
         }
     }
+
+    //Deleta pessoa
+    @DeleteMapping("/personDelete/{id}")
+    public ResponseEntity<?> deletePerson(@PathVariable(value="id") long id){
+        Optional<Person> person = personRepository.findById(id);
+        if(!person.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            personRepository.delete(person.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
 
 }
